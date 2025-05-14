@@ -23,11 +23,11 @@
                 loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600']">
                 Check Youtube URL</button>
               <div v-if="loading">
-              <span class="flex items-center justify-center">
-                <img src="/svg/tube-spinner.svg" class="w-20" alt="">
-              </span>
+                <span class="flex items-center justify-center">
+                  <img src="/svg/tube-spinner.svg" class="w-20" alt="">
+                </span>
               </div>
-              
+
             </div>
           </div>
 
@@ -107,8 +107,22 @@ const fetchInfo = async () => {
 }
 
 const startDownload = () => {
-  const url = `http://localhost:3000/api/download?url=${encodeURIComponent(youtubeUrl.value)}&format=${selectedFormat.value}`
-  window.open(url, '_blank')
+
+  try {
+    const downloadUrl = `http://localhost:3000/api/download?url=${encodeURIComponent(
+      youtubeUrl.value
+    )}&format=${selectedFormat.value}`
+    // Create a temporary hidden <a> tag
+    const link = document.createElement('a')
+    link.href = downloadUrl
+    link.setAttribute('download', '')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  } catch (e) {
+    console.error(e)
+    error.value = 'Failed to download video.'
+  }
 }
 
 const isValidYoutubeUrl = (url) => {
