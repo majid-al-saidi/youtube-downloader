@@ -6,10 +6,12 @@ import { promisify } from "util";
 import { stream } from "hono/streaming";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import path from "path";
+import { cors } from 'hono/cors'
+
 
 const execAsync = promisify(exec);
 const app = new Hono();
-
+app.use('*', cors())
 // 🧠 Get YouTube video info + available formats
 app.post("/api/info", async (c) => {
   try {
